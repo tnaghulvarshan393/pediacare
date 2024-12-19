@@ -1,0 +1,9 @@
+.logo-img{
+    width: 10vh;
+    height: 10vh;
+    border-radius:50px ;
+}
+.navbar-nav .dropdown-menu {
+    z-index: 1050; /* Higher than the default Bootstrap navbar */
+    position: absolute; /* Required for z-index to take effect */
+  }

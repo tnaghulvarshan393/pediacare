@@ -1,0 +1,101 @@
+
+.home-com{
+  
+    padding: 20px;
+}
+.book-banner{
+    background-color: rgba(112, 195, 226, 0.658);
+    
+}
+ 
+.vaccination-reminder{
+    background-color: rgba(112, 195, 226, 0.658);
+}
+ 
+.caro-img{
+    width: 50%;
+    height: 50%;
+}
+.carousel-banner{
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: rgba(112, 195, 226, 0.658);
+    height: 35vh; 
+   
+}
+.carousel-banner p{
+    text-decoration: underline;
+   
+    color: rgb(4, 4, 71);
+}
+.carousel-banner nav{
+    position: absolute ;
+    right: 10%;
+    color: rgb(4, 4, 71);
+}
+
+.carousel-banner img{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto; /* Automatically adjust margins to center */
+    width: 20%; /* Example width */
+    height: auto;
+}
+@media only screen and (max-width: 800px) {
+    .carousel-banner{
+        align-items: center;
+        background-color: rgba(112, 195, 226, 0.658);
+        height: 20vh;
+ 
+    }
+    .carousel-banner h1{
+font-size: 20px;
+    }
+    .carousel-banner h2{
+font-size: 15px;
+    }
+    .carousel-banner img{
+        width: 35%;
+        height: 90%;
+        margin-top: auto;
+        bottom: 0;
+    }
+  }
+  .diet-ref {
+    height: 40vh;
+    
+    background-color: rgba(112, 195, 226, 0.658);
+  }
+  .diet-ref img{
+    height: 60%;
+    width: 70%;
+  }
+  .priscription-ref{
+    height: 40vh;
+    background-color: rgba(112, 195, 226, 0.658);
+  }
+  .priscription-ref img{
+    height: 60%;
+    width: 70%;
+  }
+@media only screen and (max-width: 900px) {
+    .carousel-banner{
+        align-items: center;
+        background-color: rgba(112, 195, 226, 0.658);
+        height: 20vh;
+ 
+    }
+    .carousel-banner h1{
+font-size: 25px;
+    }
+    .carousel-banner img{
+        width: 25%;
+        height: 90%;
+        margin-top: auto;
+        bottom: 0;
+    }
+  }
+ 

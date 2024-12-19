@@ -1,0 +1,49 @@
+.footer{
+   
+    margin-top: 20px;
+    color: white;
+}
+.logo-side img{
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+}
+li{
+    list-style: none;
+    transition: 1s;
+}
+li:hover{
+    color: red;
+    transition: 0.8s;
+}
+.logos{ 
+    background-color: black;
+    border-radius: 10px 20px 0px 0px;
+    
+}
+.logos h6{
+    border-right: 3px solid white;
+}
+i{
+    color: aliceblue;
+  
+}
+.icons{
+    display: flex;
+}
+.up-icons{ 
+display: none;
+}
+.up-icons i{
+    height: 10px;
+    width: 10px; 
+    
+}
+@media only screen and (max-width: 900px) {
+    .icons{
+        display: none;
+    }
+    .up-icons{ 
+        display: flex;
+        }
+}
