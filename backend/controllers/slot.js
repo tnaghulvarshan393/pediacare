@@ -23,6 +23,8 @@ const getSlots = async (req, res) => {
     }
 };
 
+// addinf
+
 const bookSlot = async (req, res) => {
     const { name, parentName, age, session, service, date, pId, slot } = req.body;
 
