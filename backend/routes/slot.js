@@ -1,8 +1,7 @@
 const express = require('express');
-const { bookSlot, getSlots } = require('../controllers/slot');
+const { getSlots, bookSlot } = require('../controllers/slot');
 const router = express.Router();
 
-router.post('/slot', bookSlot);
-router.get('/slots', getSlots);
-
+router.get('/getSlots', getSlots);
+router.post('/bookSlot', bookSlot); 
 module.exports = router;

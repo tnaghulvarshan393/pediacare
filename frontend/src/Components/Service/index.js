@@ -19,7 +19,7 @@ function Service() {
   });
 
   // Get user ID from localStorage
-  const userId = JSON.parse(localStorage.getItem("user"))?.id;  // userId definition
+  const userId = JSON.parse(localStorage.getItem("user"))?.id;
 
   // Slot times
   const SlotAm = [
@@ -44,74 +44,65 @@ function Service() {
   };
 
   // Fetch slots based on selected date
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [slotError, setSlotError] = useState(null);
+  
   useEffect(() => {
     const fetchSlots = async () => {
+      setLoadingSlots(true);
+      setSlotError(null);
       try {
-        const formattedDate = new Date("2024-12-18").toISOString(); // Converts to "2024-12-18T00:00:00.000Z"
-        const url = `http://localhost:8000/clinic/slots?date=${formattedDate}`;
-        
-        console.log('Fetching slots from:', url);
-    
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch slots: ${response.status} ${response.statusText}`);
-        }
-    
+        const formattedDate = startDate.toISOString();
+        const response = await fetch(`http://localhost:8000/clinic/slots?date=${formattedDate}`);
         const data = await response.json();
-        setSlots(data.slots);
+        
+        // Debugging logs
+        console.log("Fetched slots from backend:", data);
+        
+        setSlots(data.slots || []);
       } catch (error) {
-        console.error('Error fetching slots:', error);
+        setSlotError("Failed to fetch slots. Please try again.");
+      } finally {
+        setLoadingSlots(false);
       }
     };
-    
-    
-    
-
+  
     fetchSlots();
   }, [startDate]);
 
   // Submit booking
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const userId = JSON.parse(localStorage.getItem("user"))?._id;
+  
     if (!userId) {
-      alert("User ID is missing. Please log in again.");
+      alert("User ID (_id) is missing. Please log in again.");
       return;
     }
-
+  
     const updatedFormData = { 
       ...formData, 
-      pId: userId, 
-      date: startDate.toISOString() 
+      pId: userId,  // Use the `_id` as the patient ID
+      date: startDate.toISOString(),
     };
-
+  
     if (!updatedFormData.slot) {
       alert("Please select a valid slot.");
       return;
     }
-
+  
     setIsSubmitting(true);
-
-    // Check if slot is already booked
-    const slotAlreadyBooked = slots.some(
-      (slot) => slot.time === updatedFormData.slot && slot.bookedBy
-    );
-
-    if (slotAlreadyBooked) {
-      alert("This slot is already booked. Please select another one.");
-      setIsSubmitting(false);
-      return;
-    }
-
+  
     try {
       const response = await fetch("http://localhost:8000/clinic/slot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedFormData),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         alert("Slot booked successfully!");
         setSlots((prevSlots) =>
@@ -124,6 +115,7 @@ function Service() {
       } else {
         alert(data.error || "Failed to book the slot.");
       }
+
     } catch (error) {
       console.error("Error booking slot:", error);
       alert("There was an issue booking your slot. Please try again later.");
@@ -134,35 +126,52 @@ function Service() {
 
   // Handle slot selection
   const handleSlotSelect = (slot) => {
+    console.log("Selected Slot:", slot); // Log selected slot
+    console.log("Slots Array:", slots); // Log all slots to verify structure
+    
+    // Check if the slot exists in the fetched slots data
     const selectedSlot = slots.find((s) => s.time === slot);
 
-    // Check if the slot is already booked by someone else
-    if (selectedSlot?.bookedBy && selectedSlot.bookedBy !== userId) {
-      alert("This slot is already booked by another user. Please choose another slot.");
-      return;
+    console.log("Selected Slot Found:", selectedSlot); // Log selected slot found
+
+    if (!selectedSlot) {
+        alert("Invalid slot selected.");
+        return;
     }
 
-    // Check if the slot is already selected by the user
-    if (selectedSlot?.bookedBy === userId) {
-      alert("You have already booked this slot.");
-      return;
+    // Check if the slot is already booked by another user
+    if (selectedSlot.bookedBy && selectedSlot.bookedBy !== userId) {
+        alert("This slot is already booked by another user. Please choose another slot.");
+        return;
     }
 
+    // Check if the slot is already booked by the current user
+    if (selectedSlot.bookedBy === userId) {
+        alert("You have already booked this slot.");
+        return;
+    }
+
+    // If valid, set the slot in formData
     setFormData({ ...formData, slot });
-  };
+};
+
 
   // Get button class based on slot status
   const getSlotClass = (slot) => {
     const selectedSlot = slots.find((s) => s.time === slot);
-    
-    if (selectedSlot?.bookedBy === userId) {
-      return "btn-success"; // Slot booked by the current user (will show green)
-    } else if (selectedSlot?.bookedBy) {
-      return "btn-danger"; // Slot booked by someone else (will show red)
+
+    // If no matching slot, return default class
+    if (!selectedSlot) return "btn-light"; // Free slot (light color)
+
+    if (selectedSlot.bookedBy === userId) {
+        return "btn-success"; // Booked by current user (green)
+    } else if (selectedSlot.bookedBy) {
+        return "btn-danger"; // Booked by someone else (red)
     } else {
-      return "btn-light"; // Free slot (will show as light color)
+        return "btn-light"; // Free slot (light color)
     }
-  };
+};
+
 
   return (
     <div className="service container mx-auto border">
@@ -237,39 +246,40 @@ function Service() {
               </div>
               <div className="container">
                 <div className="row">
-                  {formData.session === "AM" && SlotAm.map((slot, i) => (
-                    <div className="col-4 col-lg-3" key={i}>
-                      <button
-                        type="button"
-                        className={`w-75 text-center my-2 p-2 btn ${getSlotClass(slot)}`}
-                        onClick={() => handleSlotSelect(slot)}
-                        disabled={slots.find((s) => s.time === slot)?.bookedBy}
-                      >
-                        {slot}
-                      </button>
-                    </div>
-                  ))}
-                  {formData.session === "PM" && SlotPm.map((slot, i) => (
-                    <div className="col-4 col-lg-3" key={i}>
-                      <button
-                        type="button"
-                        className={`w-75 text-center my-2 p-2 btn ${getSlotClass(slot)}`}
-                        onClick={() => handleSlotSelect(slot)}
-                        disabled={slots.find((s) => s.time === slot)?.bookedBy}
-                      >
-                        {slot}
-                      </button>
-                    </div>
-                  ))}
+                {formData.session === "AM" && SlotAm.map((slot, i) => (
+    <div className="col-4 col-lg-3" key={i}>
+        <button
+            type="button"
+            className={`w-75 text-center my-2 p-2 btn ${getSlotClass(slot)}`}
+            onClick={() => handleSlotSelect(slot)}
+            disabled={!!slots.find((s) => s.time === slot)?.bookedBy}
+        >
+            {slot}
+        </button>
+    </div>
+))}
+
+{formData.session === "PM" && SlotPm.map((slot, i) => (
+    <div className="col-4 col-lg-3" key={i}>
+        <button
+            type="button"
+            className={`w-75 text-center my-2 p-2 btn ${getSlotClass(slot)}`}
+            onClick={() => handleSlotSelect(slot)}
+            disabled={!!slots.find((s) => s.time === slot)?.bookedBy}
+        >
+            {slot}
+        </button>
+    </div>
+))}
+
                 </div>
               </div>
-              <button
-                type="submit"
-                className="btn btn-primary my-4"
-                onClick={handleSubmit}
+              <button 
+                className="btn btn-success w-75 mt-4" 
+                onClick={handleSubmit} 
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+                {isSubmitting ? "Booking..." : "Book Appointment"}
               </button>
             </form>
           </div>
