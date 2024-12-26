@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Corrected navigation hook
+import { Link, useNavigate } from "react-router-dom"; 
 import "./index.css";
 
 function Login() {
@@ -26,17 +26,14 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
   
-      console.log("Response Status: ", response.status); // Log the response status
       const data = await response.json();
-      console.log("Response Data: ", data); // Log the response data
   
       if (response.ok) {
         // Clear previous login data in localStorage
-         
- 
         localStorage.removeItem("user");
+        localStorage.removeItem("id");
   
-        // Store new login data (token and user)
+        // Save the full patient details (excluding sensitive fields)
         localStorage.setItem("user", JSON.stringify(data.user));
   
         // Navigate to the home page after successful login
@@ -54,7 +51,7 @@ function Login() {
   
   return (
     <div className="container my-4">
-      <div className="  text-center log-banner mx-auto bg-dark">
+      <div className="text-center log-banner mx-auto bg-dark">
         <h1 className="text-light">Login</h1>
         <form onSubmit={handleLogin} className="h-75 p-3 w-75 rounded border mx-auto">
           <input

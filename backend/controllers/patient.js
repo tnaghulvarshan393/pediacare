@@ -1,41 +1,51 @@
-const PatientModel = require('../models/patient');
+const PatientModel = require('../models/patient'); // Declare only once
 
 // POST Route for Signup
 const signup = async (req, res) => {
-  const { email, password,mobile,name } = req.body;
+  const { email, password, mobile, name } = req.body;
+
   try {
-    const newPatient = new PatientModel({ email, password,mobile,name });
+    const newPatient = new PatientModel({
+      email,
+      password, // Directly store the plain password
+      mobile,
+      name,
+    });
+
     await newPatient.save();
     res.status(201).json(newPatient);
   } catch (error) {
     if (error.code === 11000) {
       res.status(400).json({ error: 'Email already exists' });
     } else {
+      console.error('Signup error:', error);
       res.status(500).json({ error: 'Failed to save patient' });
     }
   }
 };
 
-const login = async (req,res) => {
+// POST Route for Login
+const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await PatientModel.findOne({ email });
 
     if (!user || user.password !== password) {
-      return res.status(401).json({ error: "Invalid email or password." });
+      return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
+    const { password: _, ...userDetails } = user._doc;
 
-    res.json({message :"login successfully",
-      user: { id: user._id, name: user.name, email: user.email },
+    res.json({
+      message: 'Login successful',
+      user: userDetails,
     });
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ error: "Internal server error." });
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Internal server error.' });
   }
-
-}
+};
 
 // GET Route to Fetch All Signup Data
 const getPatients = async (req, res) => {
@@ -43,9 +53,34 @@ const getPatients = async (req, res) => {
     const patients = await PatientModel.find();
     res.json(patients);
   } catch (error) {
+    console.error('Error retrieving patients:', error);
     res.status(500).send('Error retrieving data');
   }
 };
+
+// Update Patient by ID
+const updatePatient = async (req, res) => {
+  const { id } = req.params;
+  const updateFields = req.body;
+
+  try {
+    const updatedPatient = await PatientModel.findByIdAndUpdate(
+      id,
+      updateFields,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedPatient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    res.status(200).json(updatedPatient);
+  } catch (error) {
+    console.error('Error updating patient:', error);
+    res.status(500).json({ error: 'Failed to update patient' });
+  }
+};
+
 
 // DELETE Route to Remove a Patient
 const deletePatient = async (req, res) => {
@@ -57,27 +92,8 @@ const deletePatient = async (req, res) => {
     }
     res.json({ message: 'Patient deleted successfully', patient: deletedPatient });
   } catch (error) {
+    console.error('Error deleting patient:', error);
     res.status(500).json({ error: 'Failed to delete patient' });
-  }
-};
-
-// UPDATE Route for Patient
-const updatePatient = async (req, res) => {
-  const { email, password } = req.body;
-  const id = req.params.id;
-  try {
-    const updatedPatient = await PatientModel.findByIdAndUpdate(
-      id,
-      
-      { email, password ,mobile,name},
-      { new: true }
-    );
-    if (!updatedPatient) {
-      return res.status(404).json({ message: 'Patient not found' });
-    }
-    res.json(updatedPatient);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update patient' });
   }
 };
 
@@ -85,6 +101,6 @@ module.exports = {
   signup,
   login,
   getPatients,
-  deletePatient,
   updatePatient,
+  deletePatient,
 };
