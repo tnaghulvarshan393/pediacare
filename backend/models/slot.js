@@ -39,10 +39,8 @@ const slotSchema = new mongoose.Schema({
   },
 });
 
-// Ensure that the combination of date and slot is unique
 slotSchema.index({ date: 1, slot: 1 }, { unique: true });
 
 const SlotModel = mongoose.model('Slot', slotSchema);
 
 module.exports = SlotModel;
-

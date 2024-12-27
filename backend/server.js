@@ -15,9 +15,9 @@ app.use(cors({
 }));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/clinic', {
-  useNewUrlParser: true, // Optional with newer versions
-  useUnifiedTopology: true, // Optional with newer versions
+mongoose.connect('mongodb://0.0.0.0:27017/clinic', {
+  // useNewUrlParser: true, 
+  // useUnifiedTopology: true,
 })
   .then(() => console.log('Database connected'))
   .catch(err => console.error('Database connection error:', err));
