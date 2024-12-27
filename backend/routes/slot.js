@@ -1,7 +1,10 @@
 const express = require('express');
-const { getSlots, bookSlot } = require('../controllers/slot');
+const { bookSlot, checkSlotAvailability, getBookedSlots } = require('../controllers/slot');
+
 const router = express.Router();
 
-router.get('/getSlots', getSlots);
-router.post('/bookSlot', bookSlot); 
+router.post('/bookslot', bookSlot);
+router.get('/availability', checkSlotAvailability);
+router.get('/booked', getBookedSlots);
+
 module.exports = router;
