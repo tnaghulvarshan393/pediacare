@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Logo from "./img/PediaCare.png";
 import "./index.css";
 
+//start heregit
+
 function Navbar() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
