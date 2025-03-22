@@ -1,0 +1,8 @@
+.finished-vaccine{
+    height: 30vh;
+    overflow-y: scroll;
+}
+.medicine-list{
+    width: 100% ;
+    overflow-x: scroll;
+}

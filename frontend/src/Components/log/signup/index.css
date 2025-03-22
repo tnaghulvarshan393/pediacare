@@ -1,0 +1,41 @@
+.log-banner{
+    background-color: #8C95E8;
+    border-radius: 20px;
+    height: 80vh;
+    width: 40%;
+ }
+ .check-input{
+    line-height: 0%;
+    height: 20px;
+    width: 20px;
+ }
+ 
+ .log-banner form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+ }
+ .auth-input{
+    color: white;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-bottom: 2px solid white;
+ 
+ }
+ @media only screen and (max-width: 850px) {
+    .log-banner{
+        background-color: #8C95E8;
+        border-radius: 20px;
+        height: 80vh;
+        width: 100%;
+     }
+ }
+ @media only screen and (max-width: 1000px) {
+    .log-banner{
+        background-color: #8C95E8;
+        border-radius: 20px;
+        height: 80vh;
+        width: 80%;
+     }
+ }

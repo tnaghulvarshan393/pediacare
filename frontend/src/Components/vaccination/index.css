@@ -1,0 +1,13 @@
+.vaccichart{
+    height: 30vh;
+    width: 20vh;
+}
+
+.vacci-list{
+    height: 70vh;
+    overflow-y: scroll;
+}
+.comp-vacci-list{
+    height: 70vh;
+    overflow-y: scroll;
+}
