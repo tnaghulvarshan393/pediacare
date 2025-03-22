@@ -1,0 +1,47 @@
+ .service-banner{
+    margin-top: 20px;
+    height: 35vh; 
+    border-radius: 10px; 
+    
+ }
+ .service-banner h1{
+    
+    top: 70%;
+    left: 40%;
+    margin-top: -50px; /* Negative half of image height */
+    margin-left: -50px; /* Negative half of image width */
+    /* Example fixed size */
+    height: 100px;
+ }
+ .service-switch{
+    height: 70vh;
+    border-right: 3px solid black;
+ }
+ .slots{
+   width: 80%;
+ }
+ .service-switch{
+   display: flex;
+   justify-content: space-evenly;
+   flex-direction: column;
+ }
+ .service-switch button{
+   width: 50%;
+ }
+  .submit{
+  width: 35%;
+ }
+ .date-picker{
+  width: 75%;
+ }
+ @media only screen and (max-width: 770px) {
+   .service-switch{
+      height: auto;
+      display: flex;
+      justify-content: space-evenly;
+      flex-direction: row;
+    }
+    .service-switch button{
+      width: 30%;
+    }
+}
